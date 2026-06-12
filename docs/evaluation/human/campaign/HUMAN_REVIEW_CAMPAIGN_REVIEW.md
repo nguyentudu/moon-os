@@ -35,6 +35,22 @@ The page shows the questionnaire and rating fields only.
 
 It does not collect data or fake submissions.
 
+## Experience Framing Updated
+
+YES
+
+The prototype now frames Moon Today as a personal continuity experience.
+
+The home page includes:
+
+- a 30-second explanation of Moon's purpose
+- Quay lại / Để yên / Suy ngẫm sections
+- the same 5 preserved awareness artifacts
+
+Redesign notes:
+
+experience_redesign_notes_v1.md
+
 ## Reviewers Contacted Count
 
 0

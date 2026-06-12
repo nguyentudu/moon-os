@@ -9,6 +9,7 @@
   --sage: #5f7469;
   --rust: #9a5b3d;
   --blue: #4f6478;
+  --plum: #6b5a72;
   --focus: #2f5d50;
 }
 
@@ -33,13 +34,14 @@ body {
 }
 
 .morning-header {
-  max-width: 720px;
+  max-width: 780px;
   padding-bottom: 28px;
   border-bottom: 1px solid var(--line);
 }
 
 .eyebrow,
-.artifact-type {
+.artifact-type,
+.section-kicker {
   margin: 0;
   color: var(--sage);
   font-size: 0.78rem;
@@ -60,14 +62,58 @@ h1 {
 .intro {
   margin: 0;
   color: var(--muted);
-  font-size: 1.06rem;
-  max-width: 640px;
+  font-size: 1.14rem;
+  max-width: 700px;
+}
+
+.continuity-note {
+  display: grid;
+  gap: 8px;
+  max-width: 760px;
+  margin-top: 22px;
+  padding: 18px 0 0;
+  color: var(--ink);
+}
+
+.continuity-note p {
+  margin: 0;
+  font-size: 1rem;
 }
 
 .awareness-list {
   display: grid;
   gap: 18px;
-  margin-top: 28px;
+  margin-top: 18px;
+}
+
+.continuity-section {
+  margin-top: 42px;
+}
+
+.section-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  gap: 24px;
+  align-items: end;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.9rem, 5vw, 3.4rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.quiet-section .section-kicker {
+  color: var(--blue);
+}
+
+.reflection-section .section-kicker {
+  color: var(--plum);
 }
 
 .awareness-item {
@@ -81,7 +127,7 @@ h1 {
   box-shadow: 0 18px 42px rgba(63, 57, 45, 0.06);
 }
 
-.item-heading h2 {
+.item-heading h3 {
   margin: 8px 0 0;
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(1.5rem, 3vw, 2.25rem);
@@ -150,10 +196,21 @@ dd {
   text-underline-offset: 4px;
 }
 
+.feedback-context,
 .feedback-panel {
   margin-top: 28px;
   padding: 24px 0;
   border-top: 1px solid var(--line);
+}
+
+.feedback-context {
+  display: grid;
+  gap: 8px;
+  max-width: 760px;
+}
+
+.feedback-context p {
+  margin: 0;
 }
 
 .feedback-panel h2 {
@@ -201,6 +258,11 @@ dd {
     grid-template-columns: 1fr;
     gap: 14px;
     padding: 20px;
+  }
+
+  .section-heading {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 
   .summary {
