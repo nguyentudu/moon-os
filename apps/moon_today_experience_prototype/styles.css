@@ -136,7 +136,50 @@ dd {
 }
 
 .review-note p {
+  margin: 0 0 8px;
+}
+
+.review-note p:last-child {
+  margin-bottom: 0;
+}
+
+.feedback-link {
+  color: var(--focus);
+  font-weight: 700;
+  text-decoration-color: rgba(47, 93, 80, 0.35);
+  text-underline-offset: 4px;
+}
+
+.feedback-panel {
+  margin-top: 28px;
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+}
+
+.feedback-panel h2 {
+  margin: 0 0 14px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+
+.question-list,
+.rating-list {
   margin: 0;
+  padding-left: 1.4rem;
+  color: var(--ink);
+}
+
+.question-list li,
+.rating-list li {
+  margin: 0 0 10px;
+}
+
+.rating-note {
+  margin: 0 0 12px;
+  color: var(--muted);
 }
 
 ::selection {
