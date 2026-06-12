@@ -1,0 +1,22 @@
+{
+  "title": "Project Alpha may be losing momentum",
+  "summary": "Project Alpha appears connected to an active quarterly goal, but recent meaningful activity is absent.",
+  "why_it_matters": "Project Alpha supports an active goal, so loss of momentum may create continuity risk.",
+  "why_now": "No meaningful activity has been recorded for 18 days while the linked goal remains active.",
+  "evidence": [
+    "Project Alpha activity history",
+    "Linked quarterly goal record",
+    "Recent project status notes"
+  ],
+  "confidence": "moderate",
+  "uncertainty": "The absence of activity may reflect an intentional pause rather than abandonment.",
+  "trust_notes": "Trust QA allowed surfacing. No sensitive personal context is included.",
+  "source_references": [
+    "docs/reasoning/task_writer/task_writer_examples.md",
+    "docs/today/today_examples.md"
+  ],
+  "continuity_verdict": "HIGH_CONCERN",
+  "awareness_outcome": "PRIORITIZE",
+  "trust_outcome": "ALLOW",
+  "task_writer_status": "approved"
+}

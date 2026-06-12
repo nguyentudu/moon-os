@@ -1,0 +1,12 @@
+{
+  "name": "moon-os",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Moon OS constitutional core and Moon Today experience prototype.",
+  "scripts": {
+    "start": "serve apps/moon_today_experience_prototype -l tcp://0.0.0.0:$PORT"
+  },
+  "dependencies": {
+    "serve": "^14.2.4"
+  }
+}
