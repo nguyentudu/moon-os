@@ -14,7 +14,13 @@ main
 
 ## Commit Hash
 
+Deployed snapshot:
+
 898a624
+
+Final GitHub snapshot:
+
+ad38c76
 
 ## Railway Service Used
 
