@@ -196,6 +196,92 @@ dd {
   text-underline-offset: 4px;
 }
 
+.runtime-shell {
+  width: min(1120px, calc(100% - 32px));
+}
+
+.runtime-flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 24px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.runtime-flow span:not([aria-hidden="true"]) {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.runtime-case {
+  margin-top: 42px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.case-heading {
+  max-width: 760px;
+}
+
+.case-heading h2 {
+  margin: 8px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: 0;
+}
+
+.synthetic-label {
+  display: inline-block;
+  margin: 0;
+  color: var(--rust);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.runtime-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.runtime-step {
+  min-width: 0;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.runtime-step h3 {
+  margin: 0 0 14px;
+  color: var(--focus);
+  font-size: 0.94rem;
+  letter-spacing: 0;
+}
+
+.runtime-step dl {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 0;
+}
+
+.runtime-step dl div {
+  padding: 12px 0;
+}
+
+.today-output {
+  border-color: rgba(95, 116, 105, 0.48);
+}
+
 .feedback-context,
 .feedback-panel {
   margin-top: 28px;
@@ -263,6 +349,10 @@ dd {
   .section-heading {
     grid-template-columns: 1fr;
     gap: 8px;
+  }
+
+  .runtime-grid {
+    grid-template-columns: 1fr;
   }
 
   .summary {
