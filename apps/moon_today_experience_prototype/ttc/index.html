@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Moon Context Challenge</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="lab-shell">
+      <header class="lab-header">
+        <p class="eyebrow">Moon TTC Lab</p>
+        <h1>Moon Context Challenge</h1>
+        <p class="subtitle">Đo xem Moon có giúp bạn hiểu ngữ cảnh nhanh hơn không.</p>
+        <div class="intro-panel">
+          <p>Bạn sẽ trả lời các câu hỏi về repo Moon.</p>
+          <p>Đây là bài test Time To Context, không phải sản phẩm cuối.</p>
+          <p>Không có backend, database, đăng nhập, hay tự động gửi kết quả. Hãy copy kết quả và gửi lại thủ công.</p>
+        </div>
+      </header>
+
+      <section class="mode-panel" aria-label="Mode selector">
+        <h2>Chọn chế độ</h2>
+        <div class="mode-buttons">
+          <button class="mode-button active" type="button" data-mode="manual">Manual Mode</button>
+          <button class="mode-button" type="button" data-mode="memory">Decision Memory Mode</button>
+        </div>
+        <p id="mode-description" class="mode-description">Manual Mode: Hãy dùng repo Moon để tìm câu trả lời. Decision Memory answers được ẩn.</p>
+      </section>
+
+      <section id="questions" class="question-list" aria-live="polite"></section>
+
+      <section class="copy-panel" aria-label="Copy all results">
+        <button id="copy-all" class="primary-button" type="button">Copy all results</button>
+        <p>Paste results into the reviewer form or send them back manually.</p>
+      </section>
+    </main>
+
+    <script src="ttc_questions.js"></script>
+    <script>
+      const state = {
+        mode: "manual",
+        timers: {},
+        elapsed: {},
+        starts: {}
+      };
+
+      const questionsEl = document.getElementById("questions");
+      const modeDescription = document.getElementById("mode-description");
+      const modeButtons = Array.from(document.querySelectorAll(".mode-button"));
+
+      function formatTime(ms) {
+        const totalSeconds = Math.floor(ms / 1000);
+        const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+        const seconds = String(totalSeconds % 60).padStart(2, "0");
+        return `${minutes}:${seconds}`;
+      }
+
+      function renderQuestions() {
+        questionsEl.innerHTML = "";
+        TTC_QUESTIONS.forEach((item, index) => {
+          const card = document.createElement("article");
+          card.className = "question-card";
+          card.dataset.id = item.id;
+
+          const answerBlock = state.mode === "memory" ? `
+            <section class="memory-answer" aria-label="Decision Memory answer">
+              <h3>Decision Memory answer</h3>
+              <dl>
+                <div><dt>Retrieved decision</dt><dd>${item.answer.records.join(", ")}</dd></div>
+                <div><dt>Reason</dt><dd>${item.answer.reason}</dd></div>
+                <div><dt>Evidence links</dt><dd><ul>${item.answer.evidence.map(link => `<li>${link}</li>`).join("")}</ul></dd></div>
+                <div><dt>Current validity</dt><dd>${item.answer.validity}</dd></div>
+                <div><dt>Confidence</dt><dd>${item.answer.confidence}</dd></div>
+                <div><dt>Unknowns</dt><dd>${item.answer.unknowns}</dd></div>
+              </dl>
+            </section>
+          ` : `
+            <p class="manual-instruction">Hãy dùng repo Moon để tìm câu trả lời.</p>
+          `;
+
+          card.innerHTML = `
+            <div class="question-heading">
+              <p class="question-number">Question ${index + 1}</p>
+              <h2>${item.question}</h2>
+            </div>
+            ${answerBlock}
+            <div class="timer-row">
+              <button type="button" class="start-button">Start timer</button>
+              <span class="timer-display">00:00</span>
+              <button type="button" class="stop-button">Stop timer</button>
+            </div>
+            <label class="answer-label">
+              ${state.mode === "memory" ? "Viết lại bằng lời của bạn." : "Answer"}
+              <textarea rows="5" placeholder="${state.mode === "memory" ? "Viết lại bằng lời của bạn." : "Write your answer here."}"></textarea>
+            </label>
+            <label class="confidence-label">
+              Confidence 1-5
+              <select>
+                <option value="">Select</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </label>
+            <button type="button" class="copy-button">Copy result</button>
+          `;
+
+          questionsEl.appendChild(card);
+        });
+      }
+
+      function updateMode(mode) {
+        state.mode = mode;
+        modeButtons.forEach(button => {
+          button.classList.toggle("active", button.dataset.mode === mode);
+        });
+        modeDescription.textContent = mode === "manual"
+          ? "Manual Mode: Hãy dùng repo Moon để tìm câu trả lời. Decision Memory answers được ẩn."
+          : "Decision Memory Mode: Câu trả lời có cấu trúc được hiển thị để bạn kiểm tra Time To Context assisted understanding.";
+        renderQuestions();
+      }
+
+      function getCardResult(card) {
+        const id = card.dataset.id;
+        const item = TTC_QUESTIONS.find(question => question.id === id);
+        const answer = card.querySelector("textarea").value.trim();
+        const confidence = card.querySelector("select").value || "not selected";
+        const elapsedText = card.querySelector(".timer-display").textContent;
+        return [
+          `Mode: ${state.mode}`,
+          `Question: ${item.question}`,
+          `Elapsed: ${elapsedText}`,
+          `Answer: ${answer || "[blank]"}`,
+          `Confidence: ${confidence}`
+        ].join("\n");
+      }
+
+      async function copyText(text) {
+        await navigator.clipboard.writeText(text);
+      }
+
+      document.addEventListener("click", async event => {
+        const modeButton = event.target.closest(".mode-button");
+        if (modeButton) {
+          updateMode(modeButton.dataset.mode);
+          return;
+        }
+
+        const card = event.target.closest(".question-card");
+        if (!card) {
+          if (event.target.id === "copy-all") {
+            const all = Array.from(document.querySelectorAll(".question-card")).map(getCardResult).join("\n\n---\n\n");
+            await copyText(all);
+            event.target.textContent = "Copied all results";
+            setTimeout(() => event.target.textContent = "Copy all results", 1600);
+          }
+          return;
+        }
+
+        const id = card.dataset.id;
+        const display = card.querySelector(".timer-display");
+
+        if (event.target.classList.contains("start-button")) {
+          clearInterval(state.timers[id]);
+          state.starts[id] = Date.now();
+          state.timers[id] = setInterval(() => {
+            display.textContent = formatTime(Date.now() - state.starts[id]);
+          }, 250);
+        }
+
+        if (event.target.classList.contains("stop-button")) {
+          if (state.starts[id]) {
+            state.elapsed[id] = Date.now() - state.starts[id];
+            display.textContent = formatTime(state.elapsed[id]);
+          }
+          clearInterval(state.timers[id]);
+        }
+
+        if (event.target.classList.contains("copy-button")) {
+          await copyText(getCardResult(card));
+          event.target.textContent = "Copied";
+          setTimeout(() => event.target.textContent = "Copy result", 1400);
+        }
+      });
+
+      renderQuestions();
+    </script>
+  </body>
+</html>
