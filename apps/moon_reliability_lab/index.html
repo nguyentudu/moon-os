@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Moon Reliability Lab</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="lab-shell">
+      <header class="lab-header">
+        <div>
+          <p class="eyebrow">Decision Extraction Study</p>
+          <h1>Moon Reliability Lab</h1>
+        </div>
+        <div class="language-toggle" aria-label="Language toggle">
+          <button class="lang-button active" type="button" data-lang="en">English</button>
+          <button class="lang-button" type="button" data-lang="vi">Tiếng Việt</button>
+        </div>
+      </header>
+
+      <section class="intro-panel" aria-labelledby="intro-title">
+        <h2 id="intro-title" data-i18n="introTitle">Classify each excerpt</h2>
+        <p data-i18n="introCopy">You are helping Moon test whether its definition of “Decision” is clear. Classify each excerpt. There are no right answers shown here.</p>
+        <p class="warning" data-i18n="warning">Do not use AI assistance while classifying.</p>
+      </section>
+
+      <section class="reviewer-panel" aria-label="Reviewer details">
+        <label>
+          <span data-i18n="reviewerId">Reviewer ID</span>
+          <input id="reviewerId" type="text" autocomplete="off" placeholder="R-001">
+        </label>
+        <label>
+          <span data-i18n="reviewDate">Date</span>
+          <input id="reviewDate" type="date">
+        </label>
+      </section>
+
+      <section class="progress-panel" aria-label="Progress">
+        <div class="progress-copy">
+          <span id="progressText">Excerpt 1 of 50</span>
+          <span id="answeredText">0 classified</span>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+      </section>
+
+      <section class="excerpt-card" aria-live="polite">
+        <div class="excerpt-meta">
+          <span id="excerptId">EV-001</span>
+          <span id="excerptSource">Source</span>
+        </div>
+        <blockquote id="excerptText"></blockquote>
+
+        <div class="classification-group" role="group" aria-label="Classification">
+          <button type="button" class="choice-button" data-choice="decision">Decision</button>
+          <button type="button" class="choice-button" data-choice="not decision">Not Decision</button>
+          <button type="button" class="choice-button" data-choice="unclear">Unclear</button>
+        </div>
+
+        <label class="comment-label">
+          <span data-i18n="comment">Optional comment</span>
+          <textarea id="comment" rows="4"></textarea>
+        </label>
+      </section>
+
+      <nav class="step-controls" aria-label="Excerpt navigation">
+        <button id="previousButton" type="button" data-i18n="previous">Previous</button>
+        <button id="nextButton" type="button" data-i18n="next">Next</button>
+      </nav>
+
+      <section class="copy-panel" aria-labelledby="copy-title">
+        <div>
+          <h2 id="copy-title" data-i18n="copyTitle">Copy results</h2>
+          <p data-i18n="copyCopy">Copy your completed results and paste them back manually. Nothing is submitted automatically.</p>
+        </div>
+        <button id="copyButton" type="button" data-i18n="copyButton">Copy all results</button>
+      </section>
+
+      <p id="copyStatus" class="copy-status" role="status"></p>
+    </main>
+
+    <script src="reliability_excerpts.js"></script>
+    <script>
+      const translations = {
+        en: {
+          introTitle: "Classify each excerpt",
+          introCopy: "You are helping Moon test whether its definition of “Decision” is clear. Classify each excerpt. There are no right answers shown here.",
+          warning: "Do not use AI assistance while classifying.",
+          reviewerId: "Reviewer ID",
+          reviewDate: "Date",
+          comment: "Optional comment",
+          previous: "Previous",
+          next: "Next",
+          copyTitle: "Copy results",
+          copyCopy: "Copy your completed results and paste them back manually. Nothing is submitted automatically.",
+          copyButton: "Copy all results",
+          copied: "Results copied.",
+          copyFailed: "Copy failed. Select and copy from the generated text below.",
+          progress: "Excerpt",
+          of: "of",
+          classified: "classified"
+        },
+        vi: {
+          introTitle: "Phân loại từng đoạn",
+          introCopy: "Bạn đang giúp Moon kiểm tra định nghĩa “Decision” có đủ rõ không. Hãy phân loại từng đoạn. Trang này không hiển thị đáp án đúng.",
+          warning: "Không dùng AI assistance khi phân loại.",
+          reviewerId: "Reviewer ID",
+          reviewDate: "Ngày",
+          comment: "Ghi chú tùy chọn",
+          previous: "Trước",
+          next: "Tiếp",
+          copyTitle: "Copy kết quả",
+          copyCopy: "Copy kết quả đã làm và gửi lại thủ công. Trang này không tự động gửi dữ liệu.",
+          copyButton: "Copy toàn bộ kết quả",
+          copied: "Đã copy kết quả.",
+          copyFailed: "Copy lỗi. Hãy chọn và copy phần text được tạo bên dưới.",
+          progress: "Đoạn",
+          of: "trên",
+          classified: "đã phân loại"
+        }
+      };
+
+      const state = {
+        index: 0,
+        lang: "en",
+        answers: RELIABILITY_EXCERPTS.map((excerpt) => ({
+          id: excerpt.id,
+          classification: "",
+          comment: ""
+        }))
+      };
+
+      const nodes = {
+        langButtons: document.querySelectorAll(".lang-button"),
+        i18n: document.querySelectorAll("[data-i18n]"),
+        reviewerId: document.getElementById("reviewerId"),
+        reviewDate: document.getElementById("reviewDate"),
+        progressText: document.getElementById("progressText"),
+        answeredText: document.getElementById("answeredText"),
+        progressBar: document.getElementById("progressBar"),
+        excerptId: document.getElementById("excerptId"),
+        excerptSource: document.getElementById("excerptSource"),
+        excerptText: document.getElementById("excerptText"),
+        choiceButtons: document.querySelectorAll(".choice-button"),
+        comment: document.getElementById("comment"),
+        previousButton: document.getElementById("previousButton"),
+        nextButton: document.getElementById("nextButton"),
+        copyButton: document.getElementById("copyButton"),
+        copyStatus: document.getElementById("copyStatus")
+      };
+
+      function applyLanguage(lang) {
+        state.lang = lang;
+        document.documentElement.lang = lang;
+        nodes.langButtons.forEach((button) => {
+          button.classList.toggle("active", button.dataset.lang === lang);
+        });
+        nodes.i18n.forEach((node) => {
+          node.textContent = translations[lang][node.dataset.i18n];
+        });
+        render();
+      }
+
+      function render() {
+        const excerpt = RELIABILITY_EXCERPTS[state.index];
+        const answer = state.answers[state.index];
+        const t = translations[state.lang];
+        const answered = state.answers.filter((item) => item.classification).length;
+
+        nodes.progressText.textContent = `${t.progress} ${state.index + 1} ${t.of} ${RELIABILITY_EXCERPTS.length}`;
+        nodes.answeredText.textContent = `${answered} ${t.classified}`;
+        nodes.progressBar.style.width = `${((state.index + 1) / RELIABILITY_EXCERPTS.length) * 100}%`;
+        nodes.excerptId.textContent = excerpt.id;
+        nodes.excerptSource.textContent = excerpt.source;
+        nodes.excerptText.textContent = excerpt.text;
+        nodes.comment.value = answer.comment;
+        nodes.choiceButtons.forEach((button) => {
+          button.classList.toggle("selected", button.dataset.choice === answer.classification);
+        });
+        nodes.previousButton.disabled = state.index === 0;
+        nodes.nextButton.disabled = state.index === RELIABILITY_EXCERPTS.length - 1;
+      }
+
+      function saveCurrentComment() {
+        state.answers[state.index].comment = nodes.comment.value.trim();
+      }
+
+      function buildResultsText() {
+        saveCurrentComment();
+        const reviewer = nodes.reviewerId.value.trim();
+        const date = nodes.reviewDate.value;
+        return state.answers.map((answer) => [
+          `Reviewer ID: ${reviewer}`,
+          `Date: ${date}`,
+          `Excerpt ID: ${answer.id}`,
+          `Classification: ${answer.classification}`,
+          `Comment: ${answer.comment}`
+        ].join("\n")).join("\n\n---\n\n");
+      }
+
+      nodes.langButtons.forEach((button) => {
+        button.addEventListener("click", () => applyLanguage(button.dataset.lang));
+      });
+
+      nodes.choiceButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          state.answers[state.index].classification = button.dataset.choice;
+          render();
+        });
+      });
+
+      nodes.comment.addEventListener("input", () => {
+        state.answers[state.index].comment = nodes.comment.value;
+      });
+
+      nodes.previousButton.addEventListener("click", () => {
+        saveCurrentComment();
+        state.index = Math.max(0, state.index - 1);
+        render();
+      });
+
+      nodes.nextButton.addEventListener("click", () => {
+        saveCurrentComment();
+        state.index = Math.min(RELIABILITY_EXCERPTS.length - 1, state.index + 1);
+        render();
+      });
+
+      nodes.copyButton.addEventListener("click", async () => {
+        const text = buildResultsText();
+        try {
+          await navigator.clipboard.writeText(text);
+          nodes.copyStatus.textContent = translations[state.lang].copied;
+        } catch (error) {
+          nodes.copyStatus.textContent = `${translations[state.lang].copyFailed}\n\n${text}`;
+        }
+      });
+
+      render();
+    </script>
+  </body>
+</html>
