@@ -9,30 +9,39 @@
   <body>
     <main class="study-shell">
       <header class="study-header">
-        <p class="eyebrow">Economic Validation Study</p>
-        <h1>Moon Time To Context Study</h1>
-        <p class="intro">This research study collects raw answers and timing evidence. It does not score answers, rank participants, or claim Moon improves anything yet.</p>
+        <div class="header-tools">
+          <p class="eyebrow" data-i18n="eyebrow">Economic Validation Study</p>
+          <label class="language-control">
+            <span data-i18n="languageLabel">Language</span>
+            <select id="languageSelect">
+              <option value="en">English</option>
+              <option value="vi">Tiếng Việt</option>
+            </select>
+          </label>
+        </div>
+        <h1 data-i18n="title">Moon Time To Context Study</h1>
+        <p class="intro" data-i18n="intro">This research study collects raw answers and timing evidence. It does not score answers, rank participants, or claim Moon improves anything yet.</p>
       </header>
 
       <section id="landing" class="panel">
-        <h2>Study setup</h2>
-        <p>You will answer context questions about Moon OS. Choose the mode assigned by the study coordinator.</p>
+        <h2 data-i18n="setupTitle">Study setup</h2>
+        <p data-i18n="setupCopy">You will answer context questions about Moon OS. Choose the mode assigned by the study coordinator.</p>
         <label>
-          Participant ID
+          <span data-i18n="participantLabel">Participant ID</span>
           <input id="participantId" type="text" autocomplete="off" placeholder="P-001">
         </label>
         <label>
-          Study Mode
+          <span data-i18n="modeLabel">Study Mode</span>
           <select id="studyMode">
-            <option value="manual">Manual Context Discovery</option>
-            <option value="decision_memory">Moon Decision Memory Assisted Context Discovery</option>
+            <option value="manual" data-i18n="manualMode">Manual Context Discovery</option>
+            <option value="decision_memory" data-i18n="memoryMode">Moon Decision Memory Assisted Context Discovery</option>
           </select>
         </label>
         <label class="consent-row">
           <input id="consent" type="checkbox">
-          <span>I consent to this study storing my copied/downloaded raw answers for later analysis.</span>
+          <span data-i18n="consentText">I consent to this study storing my copied/downloaded raw answers for later analysis.</span>
         </label>
-        <button id="startStudy" type="button">Start Study</button>
+        <button id="startStudy" type="button" data-i18n="startButton">Start Study</button>
       </section>
 
       <section id="runner" class="panel hidden" aria-live="polite">
@@ -44,47 +53,47 @@
         <p id="questionInstruction" class="instruction"></p>
 
         <div id="memoryContext" class="memory-context hidden">
-          <h3>Decision Memory Context</h3>
+          <h3 data-i18n="memoryContextTitle">Decision Memory Context</h3>
           <dl>
             <div>
-              <dt>Retrieved Records</dt>
+              <dt data-i18n="retrievedRecordsLabel">Retrieved Records</dt>
               <dd id="retrievedRecords"></dd>
             </div>
             <div>
-              <dt>Reason</dt>
+              <dt data-i18n="reasonLabel">Reason</dt>
               <dd id="memoryReason"></dd>
             </div>
             <div>
-              <dt>Evidence Links</dt>
+              <dt data-i18n="evidenceLinksLabel">Evidence Links</dt>
               <dd id="evidenceLinks"></dd>
             </div>
             <div>
-              <dt>Current Validity</dt>
+              <dt data-i18n="currentValidityLabel">Current Validity</dt>
               <dd id="currentValidity"></dd>
             </div>
             <div>
-              <dt>Unknowns</dt>
+              <dt data-i18n="unknownsLabel">Unknowns</dt>
               <dd id="unknowns"></dd>
             </div>
           </dl>
         </div>
 
         <label>
-          Answer
+          <span data-i18n="answerLabel">Answer</span>
           <textarea id="answer" rows="8" placeholder="Write your answer here."></textarea>
         </label>
         <div class="button-row">
-          <button id="submitAnswer" type="button">Submit Answer</button>
+          <button id="submitAnswer" type="button" data-i18n="submitButton">Submit Answer</button>
         </div>
       </section>
 
       <section id="complete" class="panel hidden">
-        <h2>Study complete.</h2>
-        <p>Thank you. Results will be analyzed separately.</p>
-        <p>No metrics or claims are shown here.</p>
+        <h2 data-i18n="completeTitle">Study complete.</h2>
+        <p data-i18n="completeThanks">Thank you. Results will be analyzed separately.</p>
+        <p data-i18n="completeNoClaims">No metrics or claims are shown here.</p>
         <div class="button-row">
-          <button id="copyRaw" type="button">Copy Raw Evidence</button>
-          <button id="downloadRaw" type="button">Download Raw JSON</button>
+          <button id="copyRaw" type="button" data-i18n="copyButton">Copy Raw Evidence</button>
+          <button id="downloadRaw" type="button" data-i18n="downloadButton">Download Raw JSON</button>
         </div>
         <p id="copyStatus" class="status" role="status"></p>
       </section>
@@ -92,8 +101,83 @@
 
     <script src="study_questions.js"></script>
     <script>
+      const SUPPORTED_LANGUAGES = ["en", "vi"];
+      const UI_TEXT = {
+        en: {
+          eyebrow: "Economic Validation Study",
+          languageLabel: "Language",
+          title: "Moon Time To Context Study",
+          intro: "This research study collects raw answers and timing evidence. It does not score answers, rank participants, or claim Moon improves anything yet.",
+          setupTitle: "Study setup",
+          setupCopy: "You will answer context questions about Moon OS. Choose the mode assigned by the study coordinator.",
+          participantLabel: "Participant ID",
+          modeLabel: "Study Mode",
+          manualMode: "Manual Context Discovery",
+          memoryMode: "Moon Decision Memory Assisted Context Discovery",
+          consentText: "I consent to this study storing my copied/downloaded raw answers for later analysis.",
+          startButton: "Start Study",
+          manualBadge: "Manual",
+          memoryBadge: "Decision Memory",
+          questionProgress: "Question {current} of {total}",
+          memoryInstruction: "Use the Decision Memory context below to answer in your own words.",
+          memoryContextTitle: "Decision Memory Context",
+          retrievedRecordsLabel: "Retrieved Records",
+          reasonLabel: "Reason",
+          evidenceLinksLabel: "Evidence Links",
+          currentValidityLabel: "Current Validity",
+          unknownsLabel: "Unknowns",
+          answerLabel: "Answer",
+          answerPlaceholder: "Write your answer here.",
+          submitButton: "Submit Answer",
+          completeTitle: "Study complete.",
+          completeThanks: "Thank you. Results will be analyzed separately.",
+          completeNoClaims: "No metrics or claims are shown here.",
+          copyButton: "Copy Raw Evidence",
+          downloadButton: "Download Raw JSON",
+          copiedStatus: "Raw evidence copied.",
+          participantRequired: "Participant ID is required.",
+          consentRequired: "Consent is required before starting."
+        },
+        vi: {
+          eyebrow: "Study xác thực kinh tế",
+          languageLabel: "Ngôn ngữ",
+          title: "Moon Time To Context Study",
+          intro: "Study này chỉ thu thập câu trả lời thô và bằng chứng thời gian. Nó không chấm điểm, không xếp hạng participant, và chưa tuyên bố Moon cải thiện điều gì.",
+          setupTitle: "Thiết lập study",
+          setupCopy: "Bạn sẽ trả lời các câu hỏi ngữ cảnh về Moon OS. Hãy chọn mode được study coordinator giao.",
+          participantLabel: "Participant ID",
+          modeLabel: "Study Mode",
+          manualMode: "Manual Context Discovery",
+          memoryMode: "Moon Decision Memory Assisted Context Discovery",
+          consentText: "Tôi đồng ý để study này lưu câu trả lời thô mà tôi copy/download cho phân tích sau này.",
+          startButton: "Bắt đầu study",
+          manualBadge: "Manual",
+          memoryBadge: "Decision Memory",
+          questionProgress: "Câu hỏi {current} trên {total}",
+          memoryInstruction: "Hãy dùng Decision Memory context bên dưới để trả lời bằng lời của bạn.",
+          memoryContextTitle: "Decision Memory Context",
+          retrievedRecordsLabel: "Retrieved Records",
+          reasonLabel: "Reason",
+          evidenceLinksLabel: "Evidence Links",
+          currentValidityLabel: "Current Validity",
+          unknownsLabel: "Unknowns",
+          answerLabel: "Câu trả lời",
+          answerPlaceholder: "Viết câu trả lời của bạn ở đây.",
+          submitButton: "Gửi câu trả lời",
+          completeTitle: "Study đã hoàn tất.",
+          completeThanks: "Cảm ơn bạn. Kết quả sẽ được phân tích riêng.",
+          completeNoClaims: "Trang này không hiển thị metric hay tuyên bố kết quả.",
+          copyButton: "Copy Raw Evidence",
+          downloadButton: "Download Raw JSON",
+          copiedStatus: "Raw evidence đã được copy.",
+          participantRequired: "Cần nhập Participant ID.",
+          consentRequired: "Cần đồng ý trước khi bắt đầu."
+        }
+      };
+
       const state = {
         participant_id: "",
+        participant_language: "en",
         mode: "manual",
         index: 0,
         question_start: null,
@@ -105,6 +189,7 @@
         landing: document.getElementById("landing"),
         runner: document.getElementById("runner"),
         complete: document.getElementById("complete"),
+        languageSelect: document.getElementById("languageSelect"),
         participantId: document.getElementById("participantId"),
         studyMode: document.getElementById("studyMode"),
         consent: document.getElementById("consent"),
@@ -126,6 +211,22 @@
         copyStatus: document.getElementById("copyStatus")
       };
 
+      function detectLanguage() {
+        const browserLanguage = (navigator.language || "en").slice(0, 2).toLowerCase();
+        return SUPPORTED_LANGUAGES.includes(browserLanguage) ? browserLanguage : "en";
+      }
+
+      function text(key) {
+        return UI_TEXT[state.participant_language][key] || UI_TEXT.en[key] || key;
+      }
+
+      function localized(value) {
+        if (value && typeof value === "object") {
+          return value[state.participant_language] || value.en || "";
+        }
+        return value || "";
+      }
+
       function isoNow() {
         return new Date().toISOString();
       }
@@ -135,22 +236,37 @@
         section.classList.remove("hidden");
       }
 
+      function applyLanguage(language) {
+        state.participant_language = SUPPORTED_LANGUAGES.includes(language) ? language : "en";
+        document.documentElement.lang = state.participant_language;
+        nodes.languageSelect.value = state.participant_language;
+        document.querySelectorAll("[data-i18n]").forEach((node) => {
+          node.textContent = text(node.dataset.i18n);
+        });
+        nodes.answer.placeholder = text("answerPlaceholder");
+        if (!nodes.runner.classList.contains("hidden")) {
+          renderQuestion();
+        }
+      }
+
       function renderQuestion() {
         const question = TTC_QUESTIONS[state.index];
         state.question_start = isoNow();
-        nodes.progress.textContent = `Question ${state.index + 1} of ${TTC_QUESTIONS.length}`;
-        nodes.modeBadge.textContent = state.mode === "manual" ? "Manual" : "Decision Memory";
-        nodes.questionText.textContent = question.question;
-        nodes.questionInstruction.textContent = state.mode === "manual" ? question.manual_instruction : "Use the Decision Memory context below to answer in your own words.";
+        nodes.progress.textContent = text("questionProgress")
+          .replace("{current}", state.index + 1)
+          .replace("{total}", TTC_QUESTIONS.length);
+        nodes.modeBadge.textContent = state.mode === "manual" ? text("manualBadge") : text("memoryBadge");
+        nodes.questionText.textContent = localized(question.question);
+        nodes.questionInstruction.textContent = state.mode === "manual" ? localized(question.manual_instruction) : text("memoryInstruction");
         nodes.answer.value = "";
 
         if (state.mode === "decision_memory") {
           nodes.memoryContext.classList.remove("hidden");
           nodes.retrievedRecords.textContent = question.decision_memory_context.retrieved_records.join(", ");
-          nodes.memoryReason.textContent = question.decision_memory_context.reason;
+          nodes.memoryReason.textContent = localized(question.decision_memory_context.reason);
           nodes.evidenceLinks.textContent = question.decision_memory_context.evidence_links.join("; ");
-          nodes.currentValidity.textContent = question.decision_memory_context.current_validity;
-          nodes.unknowns.textContent = question.decision_memory_context.unknowns;
+          nodes.currentValidity.textContent = localized(question.decision_memory_context.current_validity);
+          nodes.unknowns.textContent = localized(question.decision_memory_context.unknowns);
         } else {
           nodes.memoryContext.classList.add("hidden");
         }
@@ -161,6 +277,7 @@
           study: "moon_ttc_study_v1",
           study_status_at_collection: "NO_DATA_TO_RAW_CAPTURE",
           participant_id: state.participant_id,
+          participant_language: state.participant_language,
           mode: state.mode,
           run_started_at: state.run_started_at,
           run_completed_at: isoNow(),
@@ -171,11 +288,11 @@
       nodes.startStudy.addEventListener("click", () => {
         const participantId = nodes.participantId.value.trim();
         if (!participantId) {
-          alert("Participant ID is required.");
+          alert(text("participantRequired"));
           return;
         }
         if (!nodes.consent.checked) {
-          alert("Consent is required before starting.");
+          alert(text("consentRequired"));
           return;
         }
         state.participant_id = participantId;
@@ -195,9 +312,10 @@
         const elapsed = (new Date(end).getTime() - new Date(start).getTime()) / 1000;
         state.answers.push({
           participant_id: state.participant_id,
+          participant_language: state.participant_language,
           mode: state.mode,
           question_id: question.id,
-          question: question.question,
+          question: localized(question.question),
           answer,
           start_time: start,
           end_time: end,
@@ -216,7 +334,7 @@
         const text = JSON.stringify(buildPayload(), null, 2);
         try {
           await navigator.clipboard.writeText(text);
-          nodes.copyStatus.textContent = "Raw evidence copied.";
+          nodes.copyStatus.textContent = UI_TEXT[state.participant_language].copiedStatus;
         } catch (error) {
           nodes.copyStatus.textContent = text;
         }
@@ -234,6 +352,12 @@
         a.remove();
         URL.revokeObjectURL(url);
       });
+
+      nodes.languageSelect.addEventListener("change", () => {
+        applyLanguage(nodes.languageSelect.value);
+      });
+
+      applyLanguage(detectLanguage());
     </script>
   </body>
 </html>

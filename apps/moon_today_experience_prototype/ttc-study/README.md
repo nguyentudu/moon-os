@@ -25,6 +25,7 @@ This app does not:
 The app records in browser memory:
 
 - participant_id
+- participant_language
 - mode
 - question_id
 - question
@@ -36,3 +37,6 @@ The app records in browser memory:
 
 Participants copy or download raw JSON for manual import.
 
+## Localization
+
+The UI supports English and Vietnamese. Browser language is used when supported, with English as fallback. Localization changes display copy only; it does not change the study protocol, score answers, or translate participant responses.
