@@ -115,3 +115,49 @@ INTERNAL PILOT
 ↓
 
 EXTERNAL PILOT
+
+## Research Quality Track
+
+BOUNDARY VALIDATION
+
+- [Boundary Validation Review](docs/decision_memory/boundary_validation_review/BOUNDARY_VALIDATION_REVIEW.md)
+
+↓
+
+ROUND 3
+
+↓
+
+DEFINITION DECISION
+
+↓
+
+DECISION EXPANSION
+
+## Economic Validation Track
+
+ECONOMIC INSTRUMENTATION
+
+- [Economic Instrumentation](docs/economic_validation/ECONOMIC_INSTRUMENTATION_REVIEW.md)
+
+↓
+
+TTC STUDY
+
+- [Time To Context Measurement](docs/economic_validation/time_to_context_measurement_v1.md)
+
+↓
+
+CONTRIBUTOR STUDY
+
+- [Time To Contribution Measurement](docs/economic_validation/time_to_contribution_measurement_v1.md)
+
+↓
+
+ONBOARDING STUDY
+
+- [Economic Study Design](docs/economic_validation/economic_study_design_v1.md)
+
+↓
+
+REAL TEAM TRIAL
