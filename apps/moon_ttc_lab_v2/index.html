@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Moon TTC Study</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="study-shell">
+      <header class="study-header">
+        <p class="eyebrow">Economic Validation Study</p>
+        <h1>Moon Time To Context Study</h1>
+        <p class="intro">This research study collects raw answers and timing evidence. It does not score answers, rank participants, or claim Moon improves anything yet.</p>
+      </header>
+
+      <section id="landing" class="panel">
+        <h2>Study setup</h2>
+        <p>You will answer context questions about Moon OS. Choose the mode assigned by the study coordinator.</p>
+        <label>
+          Participant ID
+          <input id="participantId" type="text" autocomplete="off" placeholder="P-001">
+        </label>
+        <label>
+          Study Mode
+          <select id="studyMode">
+            <option value="manual">Manual Context Discovery</option>
+            <option value="decision_memory">Moon Decision Memory Assisted Context Discovery</option>
+          </select>
+        </label>
+        <label class="consent-row">
+          <input id="consent" type="checkbox">
+          <span>I consent to this study storing my copied/downloaded raw answers for later analysis.</span>
+        </label>
+        <button id="startStudy" type="button">Start Study</button>
+      </section>
+
+      <section id="runner" class="panel hidden" aria-live="polite">
+        <div class="runner-topline">
+          <span id="progress">Question 1 of 6</span>
+          <span id="modeBadge">Manual</span>
+        </div>
+        <h2 id="questionText"></h2>
+        <p id="questionInstruction" class="instruction"></p>
+
+        <div id="memoryContext" class="memory-context hidden">
+          <h3>Decision Memory Context</h3>
+          <dl>
+            <div>
+              <dt>Retrieved Records</dt>
+              <dd id="retrievedRecords"></dd>
+            </div>
+            <div>
+              <dt>Reason</dt>
+              <dd id="memoryReason"></dd>
+            </div>
+            <div>
+              <dt>Evidence Links</dt>
+              <dd id="evidenceLinks"></dd>
+            </div>
+            <div>
+              <dt>Current Validity</dt>
+              <dd id="currentValidity"></dd>
+            </div>
+            <div>
+              <dt>Unknowns</dt>
+              <dd id="unknowns"></dd>
+            </div>
+          </dl>
+        </div>
+
+        <label>
+          Answer
+          <textarea id="answer" rows="8" placeholder="Write your answer here."></textarea>
+        </label>
+        <div class="button-row">
+          <button id="submitAnswer" type="button">Submit Answer</button>
+        </div>
+      </section>
+
+      <section id="complete" class="panel hidden">
+        <h2>Study complete.</h2>
+        <p>Thank you. Results will be analyzed separately.</p>
+        <p>No metrics or claims are shown here.</p>
+        <div class="button-row">
+          <button id="copyRaw" type="button">Copy Raw Evidence</button>
+          <button id="downloadRaw" type="button">Download Raw JSON</button>
+        </div>
+        <p id="copyStatus" class="status" role="status"></p>
+      </section>
+    </main>
+
+    <script src="study_questions.js"></script>
+    <script>
+      const state = {
+        participant_id: "",
+        mode: "manual",
+        index: 0,
+        question_start: null,
+        run_started_at: null,
+        answers: []
+      };
+
+      const nodes = {
+        landing: document.getElementById("landing"),
+        runner: document.getElementById("runner"),
+        complete: document.getElementById("complete"),
+        participantId: document.getElementById("participantId"),
+        studyMode: document.getElementById("studyMode"),
+        consent: document.getElementById("consent"),
+        startStudy: document.getElementById("startStudy"),
+        progress: document.getElementById("progress"),
+        modeBadge: document.getElementById("modeBadge"),
+        questionText: document.getElementById("questionText"),
+        questionInstruction: document.getElementById("questionInstruction"),
+        memoryContext: document.getElementById("memoryContext"),
+        retrievedRecords: document.getElementById("retrievedRecords"),
+        memoryReason: document.getElementById("memoryReason"),
+        evidenceLinks: document.getElementById("evidenceLinks"),
+        currentValidity: document.getElementById("currentValidity"),
+        unknowns: document.getElementById("unknowns"),
+        answer: document.getElementById("answer"),
+        submitAnswer: document.getElementById("submitAnswer"),
+        copyRaw: document.getElementById("copyRaw"),
+        downloadRaw: document.getElementById("downloadRaw"),
+        copyStatus: document.getElementById("copyStatus")
+      };
+
+      function isoNow() {
+        return new Date().toISOString();
+      }
+
+      function showOnly(section) {
+        [nodes.landing, nodes.runner, nodes.complete].forEach((node) => node.classList.add("hidden"));
+        section.classList.remove("hidden");
+      }
+
+      function renderQuestion() {
+        const question = TTC_QUESTIONS[state.index];
+        state.question_start = isoNow();
+        nodes.progress.textContent = `Question ${state.index + 1} of ${TTC_QUESTIONS.length}`;
+        nodes.modeBadge.textContent = state.mode === "manual" ? "Manual" : "Decision Memory";
+        nodes.questionText.textContent = question.question;
+        nodes.questionInstruction.textContent = state.mode === "manual" ? question.manual_instruction : "Use the Decision Memory context below to answer in your own words.";
+        nodes.answer.value = "";
+
+        if (state.mode === "decision_memory") {
+          nodes.memoryContext.classList.remove("hidden");
+          nodes.retrievedRecords.textContent = question.decision_memory_context.retrieved_records.join(", ");
+          nodes.memoryReason.textContent = question.decision_memory_context.reason;
+          nodes.evidenceLinks.textContent = question.decision_memory_context.evidence_links.join("; ");
+          nodes.currentValidity.textContent = question.decision_memory_context.current_validity;
+          nodes.unknowns.textContent = question.decision_memory_context.unknowns;
+        } else {
+          nodes.memoryContext.classList.add("hidden");
+        }
+      }
+
+      function buildPayload() {
+        return {
+          study: "moon_ttc_study_v1",
+          study_status_at_collection: "NO_DATA_TO_RAW_CAPTURE",
+          participant_id: state.participant_id,
+          mode: state.mode,
+          run_started_at: state.run_started_at,
+          run_completed_at: isoNow(),
+          answers: state.answers
+        };
+      }
+
+      nodes.startStudy.addEventListener("click", () => {
+        const participantId = nodes.participantId.value.trim();
+        if (!participantId) {
+          alert("Participant ID is required.");
+          return;
+        }
+        if (!nodes.consent.checked) {
+          alert("Consent is required before starting.");
+          return;
+        }
+        state.participant_id = participantId;
+        state.mode = nodes.studyMode.value;
+        state.index = 0;
+        state.answers = [];
+        state.run_started_at = isoNow();
+        showOnly(nodes.runner);
+        renderQuestion();
+      });
+
+      nodes.submitAnswer.addEventListener("click", () => {
+        const answer = nodes.answer.value.trim();
+        const question = TTC_QUESTIONS[state.index];
+        const start = state.question_start;
+        const end = isoNow();
+        const elapsed = (new Date(end).getTime() - new Date(start).getTime()) / 1000;
+        state.answers.push({
+          participant_id: state.participant_id,
+          mode: state.mode,
+          question_id: question.id,
+          question: question.question,
+          answer,
+          start_time: start,
+          end_time: end,
+          elapsed_seconds: Number(elapsed.toFixed(3)),
+          created_at: end
+        });
+        state.index += 1;
+        if (state.index >= TTC_QUESTIONS.length) {
+          showOnly(nodes.complete);
+        } else {
+          renderQuestion();
+        }
+      });
+
+      nodes.copyRaw.addEventListener("click", async () => {
+        const text = JSON.stringify(buildPayload(), null, 2);
+        try {
+          await navigator.clipboard.writeText(text);
+          nodes.copyStatus.textContent = "Raw evidence copied.";
+        } catch (error) {
+          nodes.copyStatus.textContent = text;
+        }
+      });
+
+      nodes.downloadRaw.addEventListener("click", () => {
+        const text = JSON.stringify(buildPayload(), null, 2);
+        const blob = new Blob([text], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${state.participant_id || "participant"}_${state.mode}_ttc_raw.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+    </script>
+  </body>
+</html>
