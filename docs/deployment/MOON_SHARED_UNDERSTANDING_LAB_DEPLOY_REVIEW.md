@@ -44,17 +44,23 @@ The UI explicitly states that no scoring and no claims are shown.
 
 ## Railway Deployed
 
-NO
+YES
 
-Deployment attempts returned:
+Earlier deployment attempts returned:
 
 `Unauthorized. Please run railway login again.`
 
-Follow-up verification on 2026-06-22 also found:
+Follow-up verification on 2026-06-22 initially found:
 
 - `railway login`: `Cannot login in non-interactive mode`
 - `railway login --browserless`: `Cannot login in non-interactive mode`
 - public route: `404 Not Found`
+
+After Railway authentication was restored, the existing `moon-today-prototype` service was redeployed successfully.
+
+Build logs id:
+
+`dd61a7e2-8b19-4b97-89f8-ab95fddd2ab8`
 
 ## Public URL
 
@@ -62,7 +68,7 @@ Target route:
 
 https://moon-today-prototype-production.up.railway.app/shared-understanding/
 
-Public availability is not confirmed because Railway deployment was blocked by CLI authentication. The route currently returns `404 Not Found`.
+Public availability is confirmed.
 
 ## Commit Hash
 
@@ -70,6 +76,6 @@ Recorded in final report after commit creation.
 
 ## Verdict
 
-FAIL
+PASS
 
-The UI and deploy-ready public route files exist, but PASS requires successful Railway deployment and public URL verification. Current public verification failed.
+The public Shared Understanding Lab is deployed and verified for participant evidence collection with no scoring, no fake data, and no Shared Understanding, Team Continuity, or economic claims.
