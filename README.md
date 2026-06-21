@@ -148,9 +148,37 @@ TTC STUDY
 
 ↓
 
+RAW TTC EVIDENCE
+
+- [TTC Study Results Review](docs/economic_validation/ttc_study_results/TTC_STUDY_RESULTS_REVIEW.md)
+
+↓
+
+EARLY TTC SIGNAL ANALYSIS
+
+- [Early TTC Signal Summary](docs/economic_validation/ttc_study_results/early_ttc_signal_summary_v1.md)
+
+↓
+
+ANSWER QUALITY REVIEW
+
+- [TTC Answer Quality Review](docs/economic_validation/ttc_study_results/ttc_answer_quality_review_v1.md)
+
+↓
+
+SHARED UNDERSTANDING REVIEW
+
+- [TTC Shared Understanding Review](docs/economic_validation/ttc_study_results/ttc_shared_understanding_review_v1.md)
+
+↓
+
 CONTRIBUTOR STUDY
 
 - [Time To Contribution Measurement](docs/economic_validation/time_to_contribution_measurement_v1.md)
+
+↓
+
+CONTINUITY LOOP V1
 
 ↓
 
