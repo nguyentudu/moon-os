@@ -150,7 +150,11 @@ Raw TTC Evidence ✓
 
 Early TTC Signal ✓
 
-Answer Quality Review
+Early Quality Signal âœ“
+
+↓
+
+Shared Retrieval âœ“
 
 ↓
 
@@ -158,11 +162,15 @@ Shared Understanding Study
 
 ↓
 
-Time To Contribution Pilot
+Shared Judgement Signal ?
 
-↓
+â†“
 
-Team Continuity Pilot
+Time To Contribution Pilot ?
+
+â†“
+
+Team Continuity Pilot ?
 
 ## Roadmap
 
@@ -198,7 +206,7 @@ ANSWER QUALITY REVIEW
 
 SHARED UNDERSTANDING REVIEW
 
-- [TTC Shared Understanding Review](docs/economic_validation/ttc_study_results/ttc_shared_understanding_review_v1.md)
+- [Shared Understanding Study](docs/economic_validation/shared_understanding_study/SHARED_UNDERSTANDING_STUDY_REVIEW.md)
 
 ↓
 
