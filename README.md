@@ -136,6 +136,36 @@ DECISION EXPANSION
 
 ## Economic Validation Track
 
+## Current Evidence Status
+
+Decision Memory Foundation ✓
+
+Reliability Evidence ✓
+
+Boundary Validation ✓
+
+Economic Instrumentation ✓
+
+Raw TTC Evidence ✓
+
+Early TTC Signal ✓
+
+Answer Quality Review
+
+↓
+
+Shared Understanding Study
+
+↓
+
+Time To Contribution Pilot
+
+↓
+
+Team Continuity Pilot
+
+## Roadmap
+
 ECONOMIC INSTRUMENTATION
 
 - [Economic Instrumentation](docs/economic_validation/ECONOMIC_INSTRUMENTATION_REVIEW.md)
@@ -162,7 +192,7 @@ EARLY TTC SIGNAL ANALYSIS
 
 ANSWER QUALITY REVIEW
 
-- [TTC Answer Quality Review](docs/economic_validation/ttc_study_results/ttc_answer_quality_review_v1.md)
+- [Blinded TTC Answer Quality Review](docs/economic_validation/ttc_answer_quality_review/ANSWER_QUALITY_REVIEW.md)
 
 ↓
 
