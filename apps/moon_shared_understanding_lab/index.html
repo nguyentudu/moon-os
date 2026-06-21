@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Moon Shared Understanding Study</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="study-shell">
+      <header class="study-header">
+        <div class="header-tools">
+          <p class="eyebrow" data-i18n="eyebrow">Research Study</p>
+          <label class="language-control">
+            <span data-i18n="languageLabel">Language</span>
+            <select id="languageSelect">
+              <option value="en">English</option>
+              <option value="vi">Tiếng Việt</option>
+            </select>
+          </label>
+        </div>
+        <h1 data-i18n="title">Moon Shared Understanding Study</h1>
+        <p class="subtitle" data-i18n="subtitle">Can Moon help people reason with the same context, not just find answers faster?</p>
+        <p class="intro" data-i18n="intro">This study collects raw reasoning answers only. It does not score, rank, or claim shared understanding.</p>
+      </header>
+
+      <section id="landing" class="panel">
+        <h2 data-i18n="setupTitle">Study setup</h2>
+        <p data-i18n="setupCopy">You will answer four reasoning cases. Please explain your judgement in your own words.</p>
+        <label>
+          <span data-i18n="participantLabel">Participant ID</span>
+          <input id="participantId" type="text" autocomplete="off" placeholder="SU-P-001">
+        </label>
+        <label class="consent-row">
+          <input id="consent" type="checkbox">
+          <span data-i18n="consentText">I consent to this study storing my copied/downloaded raw answers for later analysis.</span>
+        </label>
+        <button id="startStudy" type="button" data-i18n="startButton">Start Study</button>
+      </section>
+
+      <section id="runner" class="panel hidden" aria-live="polite">
+        <div class="runner-topline">
+          <span id="progress">Case 1 of 4</span>
+          <span data-i18n="noClaimsBadge">No scoring. No claims.</span>
+        </div>
+
+        <article class="case-card">
+          <p id="caseId" class="case-id"></p>
+          <h2 id="caseTitle"></h2>
+          <p id="caseContext" class="case-context"></p>
+          <h3 data-i18n="questionLabel">Question</h3>
+          <p id="caseQuestion"></p>
+          <h3 data-i18n="requiredLabel">Your answer should include</h3>
+          <ul id="requiredList"></ul>
+        </article>
+
+        <label>
+          <span data-i18n="recommendationLabel">Recommendation</span>
+          <textarea id="recommendation" rows="4"></textarea>
+        </label>
+        <label>
+          <span data-i18n="rationaleLabel">Rationale</span>
+          <textarea id="rationale" rows="5"></textarea>
+        </label>
+        <label>
+          <span data-i18n="evidenceLabel">Evidence used</span>
+          <textarea id="evidence" rows="4"></textarea>
+        </label>
+        <label>
+          <span data-i18n="risksLabel">Risks / tradeoffs</span>
+          <textarea id="risks" rows="4"></textarea>
+        </label>
+        <label>
+          <span data-i18n="uncertaintyLabel">Uncertainty / what is not yet known</span>
+          <textarea id="uncertainty" rows="4"></textarea>
+        </label>
+        <label>
+          <span data-i18n="confidenceLabel">Confidence 1-5</span>
+          <select id="confidence">
+            <option value="">--</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </label>
+
+        <div class="button-row">
+          <button id="submitCase" type="button" data-i18n="submitButton">Submit Case</button>
+        </div>
+      </section>
+
+      <section id="complete" class="panel hidden">
+        <h2 data-i18n="completeTitle">Study complete.</h2>
+        <p data-i18n="completeThanks">Thank you. Results will be reviewed separately.</p>
+        <p data-i18n="completeNoClaims">No shared understanding, Team Continuity, or economic claim is shown here.</p>
+        <div class="button-row">
+          <button id="copyRaw" type="button" data-i18n="copyButton">Copy All Results</button>
+          <button id="downloadRaw" type="button" data-i18n="downloadButton">Download JSON</button>
+        </div>
+        <p id="copyStatus" class="status" role="status"></p>
+      </section>
+    </main>
+
+    <script src="shared_cases.js"></script>
+    <script>
+      const SUPPORTED_LANGUAGES = ["en", "vi"];
+      const UI_TEXT = {
+        en: {
+          eyebrow: "Research Study",
+          languageLabel: "Language",
+          title: "Moon Shared Understanding Study",
+          subtitle: "Can Moon help people reason with the same context, not just find answers faster?",
+          intro: "This study collects raw reasoning answers only. It does not score, rank, or claim shared understanding.",
+          setupTitle: "Study setup",
+          setupCopy: "You will answer four reasoning cases. Please explain your judgement in your own words.",
+          participantLabel: "Participant ID",
+          consentText: "I consent to this study storing my copied/downloaded raw answers for later analysis.",
+          startButton: "Start Study",
+          caseProgress: "Case {current} of {total}",
+          noClaimsBadge: "No scoring. No claims.",
+          questionLabel: "Question",
+          requiredLabel: "Your answer should include",
+          recommendationLabel: "Recommendation",
+          rationaleLabel: "Rationale",
+          evidenceLabel: "Evidence used",
+          risksLabel: "Risks / tradeoffs",
+          uncertaintyLabel: "Uncertainty / what is not yet known",
+          confidenceLabel: "Confidence 1-5",
+          submitButton: "Submit Case",
+          completeTitle: "Study complete.",
+          completeThanks: "Thank you. Results will be reviewed separately.",
+          completeNoClaims: "No shared understanding, Team Continuity, or economic claim is shown here.",
+          copyButton: "Copy All Results",
+          downloadButton: "Download JSON",
+          copiedStatus: "Raw results copied.",
+          participantRequired: "Participant ID is required.",
+          consentRequired: "Consent is required before starting."
+        },
+        vi: {
+          eyebrow: "Research Study",
+          languageLabel: "Ngôn ngữ",
+          title: "Moon Shared Understanding Study",
+          subtitle: "Moon có giúp mọi người reasoning với cùng context, không chỉ tìm câu trả lời nhanh hơn không?",
+          intro: "Study này chỉ thu thập raw reasoning answers. Nó không chấm điểm, không xếp hạng, và không tuyên bố shared understanding.",
+          setupTitle: "Thiết lập study",
+          setupCopy: "Bạn sẽ trả lời bốn reasoning cases. Hãy giải thích judgement bằng lời của bạn.",
+          participantLabel: "Participant ID",
+          consentText: "Tôi đồng ý để study này lưu câu trả lời thô mà tôi copy/download cho phân tích sau này.",
+          startButton: "Bắt đầu study",
+          caseProgress: "Case {current} trên {total}",
+          noClaimsBadge: "Không scoring. Không claims.",
+          questionLabel: "Câu hỏi",
+          requiredLabel: "Câu trả lời nên bao gồm",
+          recommendationLabel: "Recommendation",
+          rationaleLabel: "Rationale",
+          evidenceLabel: "Evidence used",
+          risksLabel: "Risks / tradeoffs",
+          uncertaintyLabel: "Uncertainty / what is not yet known",
+          confidenceLabel: "Confidence 1-5",
+          submitButton: "Gửi case",
+          completeTitle: "Study đã hoàn tất.",
+          completeThanks: "Cảm ơn bạn. Kết quả sẽ được review riêng.",
+          completeNoClaims: "Trang này không hiển thị claim về shared understanding, Team Continuity, hay economic value.",
+          copyButton: "Copy All Results",
+          downloadButton: "Download JSON",
+          copiedStatus: "Raw results đã được copy.",
+          participantRequired: "Cần nhập Participant ID.",
+          consentRequired: "Cần đồng ý trước khi bắt đầu."
+        }
+      };
+
+      const state = {
+        participant_id: "",
+        language: "en",
+        index: 0,
+        case_start: null,
+        run_started_at: null,
+        answers: []
+      };
+
+      const nodes = {
+        landing: document.getElementById("landing"),
+        runner: document.getElementById("runner"),
+        complete: document.getElementById("complete"),
+        languageSelect: document.getElementById("languageSelect"),
+        participantId: document.getElementById("participantId"),
+        consent: document.getElementById("consent"),
+        startStudy: document.getElementById("startStudy"),
+        progress: document.getElementById("progress"),
+        caseId: document.getElementById("caseId"),
+        caseTitle: document.getElementById("caseTitle"),
+        caseContext: document.getElementById("caseContext"),
+        caseQuestion: document.getElementById("caseQuestion"),
+        requiredList: document.getElementById("requiredList"),
+        recommendation: document.getElementById("recommendation"),
+        rationale: document.getElementById("rationale"),
+        evidence: document.getElementById("evidence"),
+        risks: document.getElementById("risks"),
+        uncertainty: document.getElementById("uncertainty"),
+        confidence: document.getElementById("confidence"),
+        submitCase: document.getElementById("submitCase"),
+        copyRaw: document.getElementById("copyRaw"),
+        downloadRaw: document.getElementById("downloadRaw"),
+        copyStatus: document.getElementById("copyStatus")
+      };
+
+      function isoNow() {
+        return new Date().toISOString();
+      }
+
+      function detectLanguage() {
+        const browserLanguage = (navigator.language || "en").slice(0, 2).toLowerCase();
+        return SUPPORTED_LANGUAGES.includes(browserLanguage) ? browserLanguage : "en";
+      }
+
+      function text(key) {
+        return UI_TEXT[state.language][key] || UI_TEXT.en[key] || key;
+      }
+
+      function localized(value) {
+        return value[state.language] || value.en || "";
+      }
+
+      function showOnly(section) {
+        [nodes.landing, nodes.runner, nodes.complete].forEach((node) => node.classList.add("hidden"));
+        section.classList.remove("hidden");
+      }
+
+      function applyLanguage(language) {
+        state.language = SUPPORTED_LANGUAGES.includes(language) ? language : "en";
+        document.documentElement.lang = state.language;
+        nodes.languageSelect.value = state.language;
+        document.querySelectorAll("[data-i18n]").forEach((node) => {
+          node.textContent = text(node.dataset.i18n);
+        });
+        if (!nodes.runner.classList.contains("hidden")) {
+          renderCase();
+        }
+      }
+
+      function clearInputs() {
+        nodes.recommendation.value = "";
+        nodes.rationale.value = "";
+        nodes.evidence.value = "";
+        nodes.risks.value = "";
+        nodes.uncertainty.value = "";
+        nodes.confidence.value = "";
+      }
+
+      function renderCase() {
+        const studyCase = SHARED_UNDERSTANDING_CASES[state.index];
+        state.case_start = isoNow();
+        nodes.progress.textContent = text("caseProgress")
+          .replace("{current}", state.index + 1)
+          .replace("{total}", SHARED_UNDERSTANDING_CASES.length);
+        nodes.caseId.textContent = studyCase.id;
+        nodes.caseTitle.textContent = localized(studyCase.title);
+        nodes.caseContext.textContent = localized(studyCase.context);
+        nodes.caseQuestion.textContent = localized(studyCase.question);
+        nodes.requiredList.innerHTML = "";
+        localized(studyCase.required).forEach((item) => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          nodes.requiredList.appendChild(li);
+        });
+        clearInputs();
+      }
+
+      function buildPayload() {
+        return {
+          study: "moon_shared_understanding_study_v1",
+          study_status_at_collection: "RAW_CAPTURE_ONLY",
+          participant_id: state.participant_id,
+          language: state.language,
+          run_started_at: state.run_started_at,
+          run_completed_at: isoNow(),
+          answers: state.answers
+        };
+      }
+
+      nodes.startStudy.addEventListener("click", () => {
+        const participantId = nodes.participantId.value.trim();
+        if (!participantId) {
+          alert(text("participantRequired"));
+          return;
+        }
+        if (!nodes.consent.checked) {
+          alert(text("consentRequired"));
+          return;
+        }
+        state.participant_id = participantId;
+        state.index = 0;
+        state.answers = [];
+        state.run_started_at = isoNow();
+        showOnly(nodes.runner);
+        renderCase();
+      });
+
+      nodes.submitCase.addEventListener("click", () => {
+        const studyCase = SHARED_UNDERSTANDING_CASES[state.index];
+        const start = state.case_start;
+        const end = isoNow();
+        const elapsed = (new Date(end).getTime() - new Date(start).getTime()) / 1000;
+        state.answers.push({
+          participant_id: state.participant_id,
+          language: state.language,
+          case_id: studyCase.id,
+          case_title: localized(studyCase.title),
+          case_question: localized(studyCase.question),
+          recommendation: nodes.recommendation.value,
+          rationale: nodes.rationale.value,
+          evidence_used: nodes.evidence.value,
+          risks_tradeoffs: nodes.risks.value,
+          uncertainty: nodes.uncertainty.value,
+          confidence: nodes.confidence.value,
+          start_time: start,
+          end_time: end,
+          elapsed_seconds: Number(elapsed.toFixed(3)),
+          created_at: end
+        });
+        state.index += 1;
+        if (state.index >= SHARED_UNDERSTANDING_CASES.length) {
+          showOnly(nodes.complete);
+        } else {
+          renderCase();
+        }
+      });
+
+      nodes.copyRaw.addEventListener("click", async () => {
+        const raw = JSON.stringify(buildPayload(), null, 2);
+        try {
+          await navigator.clipboard.writeText(raw);
+          nodes.copyStatus.textContent = text("copiedStatus");
+        } catch (error) {
+          nodes.copyStatus.textContent = raw;
+        }
+      });
+
+      nodes.downloadRaw.addEventListener("click", () => {
+        const raw = JSON.stringify(buildPayload(), null, 2);
+        const blob = new Blob([raw], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${state.participant_id || "participant"}_shared_understanding_raw.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+
+      nodes.languageSelect.addEventListener("change", () => {
+        applyLanguage(nodes.languageSelect.value);
+      });
+
+      applyLanguage(detectLanguage());
+    </script>
+  </body>
+</html>
